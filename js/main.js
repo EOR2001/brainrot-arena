@@ -595,7 +595,7 @@ function shootHit(e, j, dx, dz, w, hx, hy, hz) {
   if (e.hp <= 0) killEnemy(e, 'shot');
   else {
     knock(e, 0.9 + Math.random() * 0.4);
-    if (Math.random() < 0.3) shout(e, SHOT_LINES[Math.floor(Math.random() * SHOT_LINES.length)], 1.2, 'hit', true);
+    if (Math.random() < 0.12) shout(e, SHOT_LINES[Math.floor(Math.random() * SHOT_LINES.length)], 1.2, 'hit', true);
   }
 }
 
@@ -808,7 +808,7 @@ function applySlap(e, fx0, fz0, lx, lz, w) {
   if (e.hp <= 0) killEnemy(e, 'slap');
   else {
     knock(e, 1.0 + Math.random() * 0.4);
-    if (Math.random() < 0.55) shout(e, HIT_LINES[Math.floor(Math.random() * HIT_LINES.length)], 1.3, 'hit', true);
+    if (Math.random() < 0.25) shout(e, HIT_LINES[Math.floor(Math.random() * HIT_LINES.length)], 1.3, 'hit', true);
   }
 }
 
@@ -830,8 +830,8 @@ function killEnemy(e, how) {
   const b = e.body;
   const s = project(camera, b.p[HEAD * 3], b.p[HEAD * 3 + 1] + 0.9, b.p[HEAD * 3 + 2], innerWidth, innerHeight);
   const pool = Math.random() < 0.5 ? e.ty.death : KILL_TEXT;
-  if (G.combo < 4 || Math.random() < 0.25) setTimeout(() => fx.text(s.x, s.y - 24, pool[Math.floor(Math.random() * pool.length)], 'kill'), 90);
-  if (G.combo >= 2) showCombo(G.combo);
+  if (G.combo < 3 && Math.random() < 0.35) setTimeout(() => fx.text(s.x, s.y - 24, pool[Math.floor(Math.random() * pool.length)], 'kill'), 90);
+  if (G.combo >= 3) showCombo(G.combo);
   if (e.key === 'boss') { banner(how === 'slap' ? 'BOSS SLAPPED' : how === 'beam' ? 'BOSS VAPORIZED' : 'BOSS DESTROYED', '+5000 aura'); shake = 1.5; }
   if (!G.firstBlood) { G.firstBlood = true; }
   fx.drop(e);
@@ -1122,7 +1122,7 @@ function updateChad(e, dt, dist) {
     if (Math.random() < 0.15 + k * 0.3) fx.burst(b.x + (Math.random() - 0.5) * 1.6, 0.2 + Math.random() * 1.5, b.z + (Math.random() - 0.5) * 1.6, 1, 0xb08a1a, 0.3, 0.045 + k * 0.03, 1.6 + k * 2, -0.05);
     C.ringT = (C.ringT || 0) - dt;
     if (C.ringT <= 0) { C.ringT = 0.45 - k * 0.2; fx.ring(b.x, 0.06, b.z, 0xffd23d, 0.9 + k * 1.6, 0.5, 0.5 + k * 0.4, 0.3); }
-    if (Math.random() < dt * 0.4) { const s2 = project(camera, b.x, 3.2 * b.s, b.z, innerWidth, innerHeight); fx.text(s2.x, s2.y, '+1000 AURA', 'heal'); }
+    if (Math.random() < dt * 0.12) { const s2 = project(camera, b.x, 3.2 * b.s, b.z, innerWidth, innerHeight); fx.text(s2.x, s2.y, '+1000 AURA', 'heal'); }
     if (e.auraT >= need && !e.ssj) {
       // first full aura bar: go Super Saiyan
       C.phase = 'transform'; C.t = 0; e.farming = true;
@@ -1322,7 +1322,7 @@ function onImpact(b, i, speed, kind) {
     G.aura += 50;
     shake = Math.min(1.2, shake + 0.15);
     const s = project(camera, x, y + 0.5, z, innerWidth, innerHeight);
-    if (Math.random() < 0.5) fx.text(s.x, s.y, 'WALL SLAM!', 'strike');
+    if (Math.random() < 0.25) fx.text(s.x, s.y, 'WALL SLAM!', 'strike');
   }
   if (kind === 0 && e.kind === 'enemy') e.wallSlam = false;
 }
@@ -1407,7 +1407,7 @@ function updatePacks(dt) {
     if (!up.length || !up.some(e => Math.hypot(e.body.x - pb.x, e.body.z - pb.z) < 18)) continue;
     const r = Math.random();
     const line = r < 0.7 ? 'DO U KNOW DE WAY' : r < 0.82 ? 'SPIT ON HIM' : r < 0.92 ? 'DE WAY' : 'MY QUEEN';
-    for (const e of up) shout(e, line, 1.7, '', false);
+    for (const e of up.slice(0, 3)) shout(e, line, 1.7, '', false);
     SFX.speak(line === 'DO U KNOW DE WAY' ? 'do you know da way' : line.toLowerCase(), 0.4, 0.95, true);
   }
 }
@@ -1418,7 +1418,7 @@ function updateChatter(dt) {
   if (G.shoutT > 0 || !player.alive) return;
   const pb = player.body;
   const cands = enemies.filter(e => !e.dead && e.state === 'alive' && !e.pack && !fx.isTalking(e) && Math.hypot(e.body.x - pb.x, e.body.z - pb.z) < 15);
-  G.shoutT = cands.length > 8 ? 0.55 + Math.random() * 0.6 : 1 + Math.random() * 1.2;
+  G.shoutT = cands.length > 8 ? 1.3 + Math.random() * 0.9 : 1.8 + Math.random() * 1.4;
   if (!cands.length) return;
   const e = cands[Math.floor(Math.random() * cands.length)];
   const line = Math.random() < 0.55 ? e.ty.lines[Math.floor(Math.random() * e.ty.lines.length)] : GENERIC[Math.floor(Math.random() * GENERIC.length)];
@@ -1715,6 +1715,11 @@ function render(dt) {
   }
   cr.end();
 
+  if (player && mode !== 'menu') {
+    const pb = player.body;
+    fx.avoid = project(camera, pb.p[CHEST * 3], pb.p[CHEST * 3 + 1], pb.p[CHEST * 3 + 2], w, h);
+    fx.focus = { x: pb.x, z: pb.z };
+  } else { fx.avoid = null; fx.focus = null; }
   fx.update(mode === 'paused' ? 0 : dt * (hitstop > 0 ? 0.3 : 1), camera, w, h, (t) => (t.body && enemies.includes(t) ? { x: t.body.p[0], y: t.body.p[1], z: t.body.p[2] } : null));
 
   // pickup labels

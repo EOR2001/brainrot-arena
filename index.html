@@ -210,11 +210,11 @@ ol.board li.empty { display: block; color: var(--dim); font-size: 14px; line-hei
   border: 3px solid var(--paper); background: rgba(12,10,18,0.7); box-shadow: 4px 4px 0 var(--ink);
 }
 .banner {
-  position: absolute; left: 50%; top: 18%; transform: translateX(-50%); text-align: center; display: flex; flex-direction: column; gap: 4px;
+  position: absolute; left: 50%; top: 11%; transform: translateX(-50%); text-align: center; display: flex; flex-direction: column; gap: 2px;
   animation: bannerIn 2.6s ease forwards; width: max-content; max-width: calc(100% - 32px);
 }
-.banner b { font-family: var(--f-arcade); font-weight: 400; font-size: clamp(32px, 7vw, 60px); color: var(--zap); text-shadow: 4px 4px 0 var(--hot), 7px 7px 0 var(--ink); line-height: 1; }
-.banner small { font-family: var(--f-shout); font-size: clamp(18px, 3vw, 26px); letter-spacing: 0.05em; color: var(--paper); text-shadow: 2px 2px 0 var(--ink); }
+.banner b { font-family: var(--f-arcade); font-weight: 400; font-size: clamp(24px, 4.6vw, 40px); color: var(--zap); text-shadow: 3px 3px 0 var(--hot), 5px 5px 0 var(--ink); line-height: 1; }
+.banner small { font-family: var(--f-shout); font-size: clamp(14px, 2vw, 19px); letter-spacing: 0.05em; color: var(--paper); text-shadow: 2px 2px 0 var(--ink); }
 @keyframes bannerIn {
   0% { opacity: 0; transform: translateX(-50%) scale(2.2) rotate(-6deg); }
   12% { opacity: 1; transform: translateX(-50%) scale(1) rotate(-2deg); }
@@ -222,7 +222,7 @@ ol.board li.empty { display: block; color: var(--dim); font-size: 14px; line-hei
   100% { opacity: 0; transform: translateX(-50%) translateY(-30px) scale(0.9) rotate(-2deg); }
 }
 .combo {
-  position: absolute; left: 50%; top: 31%; transform: translateX(-50%) rotate(3deg); font-family: var(--f-shout); font-size: clamp(30px, 5vw, 48px);
+  position: absolute; left: 50%; top: 26%; transform: translateX(-50%) rotate(3deg); font-family: var(--f-shout); font-size: clamp(20px, 3vw, 30px);
   color: var(--cyan); letter-spacing: 0.04em; text-shadow: 3px 3px 0 var(--ink), -2px -2px 0 var(--ink), 2px -2px 0 var(--ink), -2px 2px 0 var(--ink);
   white-space: nowrap;
 }
@@ -242,15 +242,15 @@ ol.board li.empty { display: block; color: var(--dim); font-size: 14px; line-hei
 /* ---------- world-anchored text ---------- */
 #fx { position: fixed; inset: 0; pointer-events: none; z-index: 8; overflow: hidden; }
 .ftext {
-  position: absolute; transform: translate(-50%, -50%) rotate(var(--rot)); font-family: var(--f-shout); font-size: 34px; letter-spacing: 0.03em;
+  position: absolute; transform: translate(-50%, -50%) rotate(var(--rot)); font-family: var(--f-shout); font-size: 22px; letter-spacing: 0.03em;
   color: var(--zap); white-space: nowrap; -webkit-text-stroke: 1.5px var(--ink);
-  text-shadow: 3px 3px 0 var(--ink); animation: pop 0.75s cubic-bezier(.2,1.6,.4,1) forwards;
+  text-shadow: 2px 2px 0 var(--ink); animation: pop 0.6s cubic-bezier(.2,1.6,.4,1) forwards; opacity: 0.95;
 }
-.ftext.big { font-size: 48px; color: var(--hot); }
-.ftext.kill { font-size: 26px; color: var(--paper); animation-duration: 1.1s; }
+.ftext.big { font-size: 30px; color: var(--hot); }
+.ftext.kill { font-size: 16px; color: var(--paper); animation-duration: 0.8s; }
 .ftext.heal { color: var(--lime); }
-.ftext.item { color: var(--cyan); font-size: 30px; }
-.ftext.strike { color: var(--cyan); font-size: 40px; }
+.ftext.item { color: var(--cyan); font-size: 22px; }
+.ftext.strike { color: var(--cyan); font-size: 24px; }
 @keyframes pop {
   0% { transform: translate(-50%, -50%) rotate(var(--rot)) scale(0.2); opacity: 0; }
   25% { transform: translate(-50%, -50%) rotate(var(--rot)) scale(1.2); opacity: 1; }
@@ -259,18 +259,18 @@ ol.board li.empty { display: block; color: var(--dim); font-size: 14px; line-hei
   100% { transform: translate(-50%, -110%) rotate(var(--rot)) scale(0.95); opacity: 0; }
 }
 .bubble {
-  position: absolute; left: 0; top: 0; max-width: 190px; padding: 6px 10px 5px; background: var(--paper); color: var(--ink);
-  font-family: var(--f-shout); font-size: 17px; letter-spacing: 0.03em; line-height: 1.05; text-align: center;
-  border: 2.5px solid var(--ink); border-radius: 14px; box-shadow: 3px 3px 0 rgba(12,10,18,0.6);
+  position: absolute; left: 0; top: 0; max-width: 150px; padding: 4px 8px 3px; background: var(--paper); color: var(--ink); opacity: 0.9;
+  font-family: var(--f-shout); font-size: 13.5px; letter-spacing: 0.03em; line-height: 1.05; text-align: center;
+  border: 2px solid var(--ink); border-radius: 11px; box-shadow: 2px 2px 0 rgba(12,10,18,0.5);
   will-change: transform; text-wrap: balance;
 }
 .bubble::after {
-  content: ''; position: absolute; left: 50%; bottom: -10px; width: 14px; height: 14px; background: var(--paper);
-  border-right: 2.5px solid var(--ink); border-bottom: 2.5px solid var(--ink); transform: translateX(-50%) rotate(45deg) skew(10deg, 10deg);
+  content: ''; position: absolute; left: 50%; bottom: -7px; width: 10px; height: 10px; background: var(--paper);
+  border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: translateX(-50%) rotate(45deg) skew(10deg, 10deg);
 }
 .bubble.hit { background: var(--zap); }
 .bubble.hit::after { background: var(--zap); }
-.bubble.boss { background: var(--blood); color: var(--paper); font-size: 21px; }
+.bubble.boss { background: var(--blood); color: var(--paper); font-size: 16px; }
 .bubble.boss::after { background: var(--blood); }
 .plabel {
   position: absolute; left: 0; top: 0; font-family: var(--f-arcade); font-size: 10px; letter-spacing: 0.08em; color: var(--ink);

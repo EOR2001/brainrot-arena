@@ -40,6 +40,9 @@ export class FX {
       this.bubbles.push({ el, target: null, t: 0, dur: 0 });
     }
     this.texts = [];
+    this.lastText = {};
+    this.avoid = null; this.focus = null;
+    this.maxBubbles = 4;
     this.m4 = new THREE.Matrix4();
   }
   burst(x, y, z, n, color, speed = 6, size = 0.08, up = 3, grav = 1) {
@@ -59,8 +62,18 @@ export class FX {
     R.m.material.color.set(color).multiplyScalar(2);
     return R;
   }
-  text(sx, sy, str, cls = '', rot = (Math.random() - 0.5) * 24) {
-    if (this.texts.length > 26) { const old = this.texts.shift(); old.remove(); }
+  text(sx, sy, str, cls = '', rot = (Math.random() - 0.5) * 16) {
+    // Keep the screen readable: routine callouts are rate-limited per kind, only a few
+    // live at once, and nothing lands on top of the player.
+    const group = cls === '' || cls === 'big' ? 'hit' : cls;
+    const now = performance.now();
+    if (['hit', 'kill', 'strike'].includes(group)) {
+      if (now - (this.lastText[group] || 0) < (group === 'kill' ? 450 : 280)) return;
+      this.lastText[group] = now;
+    }
+    while (this.texts.length >= 6) { const old = this.texts.shift(); old.remove(); }
+    const A = this.avoid;
+    if (A && Math.abs(sx - A.x) < 90 && sy > A.y - 120 && sy < A.y + 70) sy = A.y - 125;
     const el = document.createElement('div');
     el.className = 'ftext ' + cls;
     el.textContent = str;
@@ -71,7 +84,9 @@ export class FX {
     el.addEventListener('animationend', () => { el.remove(); const i = this.texts.indexOf(el); if (i >= 0) this.texts.splice(i, 1); });
   }
   bubble(target, str, dur = 2, cls = '') {
-    let B = this.bubbles.find(b => b.target === target) || this.bubbles.find(b => !b.target);
+    const mine = this.bubbles.find(b => b.target === target);
+    if (!mine && cls !== 'boss' && this.bubbles.filter(b => b.target).length >= this.maxBubbles) return null;
+    let B = mine || this.bubbles.find(b => !b.target);
     if (!B) B = this.bubbles.reduce((a, b) => (a.t / a.dur > b.t / b.dur ? a : b));
     B.target = target; B.t = 0; B.dur = dur;
     B.el.textContent = str;
@@ -133,7 +148,10 @@ export class FX {
       const hp = headOf(B.target);
       if (B.t > B.dur || !hp) { B.target = null; B.el.hidden = true; continue; }
       const p = project(camera, hp.x, hp.y + 0.55, hp.z, w, h);
-      if (!p.on || p.x < -100 || p.y < -60 || p.x > w + 100 || p.y > h + 60) { B.el.style.visibility = 'hidden'; continue; }
+      // hide bubbles of enemies that are right on top of the player so they don't cover the fight
+      const F = this.focus, A = this.avoid;
+      const tooClose = (F && Math.hypot(hp.x - F.x, hp.z - F.z) < 2.6) || (A && Math.abs(p.x - A.x) < 80 && p.y > A.y - 40 && p.y < A.y + 140);
+      if (tooClose || !p.on || p.x < -100 || p.y < -60 || p.x > w + 100 || p.y > h + 60) { B.el.style.visibility = 'hidden'; continue; }
       B.el.style.visibility = 'visible';
       B.el.style.transform = `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px) translate(-50%, -100%) rotate(var(--tilt))`;
     }
